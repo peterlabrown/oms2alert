@@ -1,0 +1,28 @@
+import mysql.connector
+import mailparser
+import datetime
+import os
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import smtplib
+
+# create message object instance
+msg = MIMEMultipart()
+message = "Now is the time for all good men to come to the aid of the party!"
+
+password = "Troubleon2!"
+msg['From'] = "peter"
+msg['To'] = "peter.brown6@finance.nsw.gov.au"
+msg['Subject'] = "Test"
+ 
+# add in the message body
+msg.attach(MIMEText(message, 'plain'))
+
+server = smtplib.SMTP('dfsi.itchi.consulting', 25)
+server.starttls()
+server.login(msg['From'], "Troubleon2!")
+ 
+server.sendmail(msg['From'], msg['To'], msg.as_string())
+server.quit()
+
+
