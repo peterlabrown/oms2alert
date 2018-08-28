@@ -4,16 +4,16 @@ do
 
  flag=`echo $subject|awk '{print match($0,"SRS - Alert Hardware Fault")}'`;
  if [ $flag -gt 0 ];then
-  ~/.local/bin/mailparser -f ~/Maildir/new/$a -b >> ~/dfsioms/omshwfile.txt
+  ~/.local/bin/mailparser -f ~/Maildir/new/$a -b >> ~/oms2alert/omshwfile.txt
   rm ~/Maildir/new/$a
  fi
 
  flag=`echo $subject|awk '{print match($0,"SRS - Alert Software Fault")}'`;
  if [ $flag -gt 0 ];then
-  ~/.local/bin/mailparser -f ~/Maildir/new/$a -b >> ~/dfsioms/omsswfile.txt
+  ~/.local/bin/mailparser -f ~/Maildir/new/$a -b >> ~/oms2alert/omsswfile.txt
   rm ~/Maildir/new/$a
  fi
 done
-/usr/bin/python3 ~/dfsioms/oms2alert_hw.py
-/usr/bin/python3 ~/dfsioms/oms2alert_sw.py
+/usr/bin/python3 ~/oms2alert/oms2alert_hw.py
+/usr/bin/python3 ~/oms2alert/oms2alert_sw.py
 

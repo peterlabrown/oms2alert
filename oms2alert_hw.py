@@ -8,7 +8,7 @@ from email.mime.text import MIMEText
 import smtplib
 
 # Get configuration information
-with open("config.yml", 'r') as ymlfile:
+with open("/home/peter/oms2alert/config.yml", 'r') as ymlfile:
   cfg = yaml.load(ymlfile)
 
 # create message object instance
@@ -27,19 +27,19 @@ mydb = mysql.connector.connect(
 )
 
 dbcursor = mydb.cursor()
-insertsql = "INSERT INTO `alertstate` (`datetime`, `computer`, `confmic`, `confspeaker`, `defaultmic`, `camera`, `display`, `motion`, `hdmi`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-auditsql = "INSERT INTO `alerts` (`datetime`, `computer`, `confmic`, `confspeaker`, `defaultmic`, `camera`, `display`, `motion`, `hdmi`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-updatesql = "UPDATE alertstate SET `datetime` = %s, `computer` = %s, `confmic` = %s, `confspeaker` = %s, `defaultmic` = %s, `camera` = %s, `display` = %s, `motion` = %s, `hdmi` = %s WHERE computer LIKE %s"
+insertsql = "INSERT INTO `alertstate` (`datetime`, `computer`, `confmic`, `confspeaker`, `defaultspeaker`, `camera`, `display`, `motion`, `hdmi`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+auditsql = "INSERT INTO `alerts` (`datetime`, `computer`, `confmic`, `confspeaker`, `defaultspeaker`, `camera`, `display`, `motion`, `hdmi`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+updatesql = "UPDATE alertstate SET `datetime` = %s, `computer` = %s, `confmic` = %s, `confspeaker` = %s, `defaultspeaker` = %s, `camera` = %s, `display` = %s, `motion` = %s, `hdmi` = %s WHERE computer LIKE %s"
 selectsql = "SELECT * FROM `alertstate` WHERE `computer` LIKE %s ORDER BY `datetime` DESC LIMIT 1"
 getcompssql = "SELECT * FROM `alertstate`"
-columns = ("Time Stamp", "Computer", "Conference Mic", "Conference Speaker", "Default Mic", "Camera", "Display", "Motion Sensor", "HDMI Ingres")
+columns = ("Time Stamp", "Computer", "Conference Mic", "Conference Speaker", "Default Speaker", "Camera", "Display", "Motion Sensor", "HDMI Ingres")
 insertlist = []
 emailbody = []
 newentry = 0
 message = ""
 
-if os.path.exists("/home/peter/dfsioms/omshwfile.txt"):
-  omsfile = open("/home/peter/dfsioms/omshwfile.txt", "r")
+if os.path.exists("/home/peter/oms2alert/omshwfile.txt"):
+  omsfile = open("/home/peter/oms2alert/omshwfile.txt", "r")
   for line in omsfile:
     field = line.split()
     if len(field) > 1:
@@ -81,7 +81,7 @@ if os.path.exists("/home/peter/dfsioms/omshwfile.txt"):
         newentry = 0 # reset newentry
         mydb.commit()
 #else:
-#  print("/home/peter/dfsioms/omshwfile.txt does not exist")
+#  print("/home/peter/oms2alert/omshwfile.txt does not exist")
 
 # Reset the alert state for any computers we havent heard anything about for 3 hours
 ts = datetime.datetime.utcnow()
@@ -108,5 +108,5 @@ if len(message) > 0:
   server.sendmail(msg['From'], msg['To'].split(","), msg.as_string())
 server.quit()
 
-if os.path.exists("/home/peter/dfsioms/omshwfile.txt"):
-  os.remove("/home/peter/dfsioms/omshwfile.txt")
+if os.path.exists("/home/peter/oms2alert/omshwfile.txt"):
+  os.remove("/home/peter/oms2alert/omshwfile.txt")
