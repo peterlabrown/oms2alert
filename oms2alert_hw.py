@@ -56,6 +56,11 @@ if os.path.exists("/home/peter/oms2alert/omshwfile.txt"):
           selectlist = [0,computertup, 0, 0, 0, 0, 0, 0, 0]
         insertlist.append(computer)
       if field[0] == "RenderedDescription":
+        if len(field) == 32: # don't process alerts from AppVersion 3.0.x
+          insertlist.clear()
+          continue
+        print(field)
+        print(len(field))
         j = 2
         for i in [5, 10, 15, 19, 26, 31, 36]:
           if field[i] == "Healthy.":
@@ -70,6 +75,7 @@ if os.path.exists("/home/peter/oms2alert/omshwfile.txt"):
   		
   # After we get RenderedDescription, we have all the data for the row
         val = tuple(insertlist)
+        print(val)
         dbcursor.execute(auditsql, val)
         if newentry == 0:
           insertlist.append(computer) # add computer for the update
